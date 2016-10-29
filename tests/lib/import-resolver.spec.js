@@ -168,7 +168,36 @@ describe('ImportResolver', function () {
     });
 
     describe('#resolve', function () {
-        // TODO add unit tests
+         beforeEach(function () {
+            subject = new ImportResolver({
+                "output": "foo",
+                "ext": "scss",
+                "pathToMain": "./tests/import-regex/testimports.scss"
+            });
+            var filename = subject.root.pop();
+            filename = subject.trimExtension(filename);
+
+            subject.root = subject.root.join(path.sep) + path.sep;
+
+            subject.dist = subject.read(filename);
+         });
+
+        afterEach(function () {
+            subject = null;
+        });
+        
+        it('should resolve imports correctly', function(){
+            
+            let matches = subject.resolve(subject.dist, true); 
+            expect(path.basename(matches[0][1])).toBe('custom')
+            expect(path.basename(matches[1][1])).toBe('variables')
+            expect(path.basename(matches[2][1])).toBe('mixins')
+            expect(path.basename(matches[3][1])).toBe('normalize')
+            expect(path.basename(matches[4][1])).toBe('namespace-styles')
+            
+                    
+         });
+        
     });
 
     describe('#write', function () {
